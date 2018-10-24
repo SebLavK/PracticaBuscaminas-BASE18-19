@@ -35,10 +35,44 @@ public class ControlJuego {
 	 * 			El resto de posiciones que no son minas guardan en el entero cuántas minas hay alrededor de la celda
 	 */
 	public void inicializarPartida(){
-
-		//TODO: Repartir minas e inicializar puntaci�n. Si hubiese un tablero anterior, lo pongo todo a cero para inicializarlo.
+		//Pone el tablero a cero
+		for (int i = 0; i < tablero.length; i++) {
+			for (int j = 0; j < tablero[0].length; j++) {
+				tablero[i][j] = 0;
+			}
+		}
+		//TODO repartir minas
+		/*
+		 * Crea un vector con tantas casillas como tenga el tablero con 20 minas y las reordena
+		 */
+		int[] linearMines = new int[LADO_TABLERO*LADO_TABLERO];
+		Random rd = new Random();
+		int aux, newPos;
+		//Anade 20 minas
+		//TODO chequear que no se anadan mas minas que casillas haya en el tablero (no hace falta de momento)
+		for (int i = 0; i < 20; i++) {
+			linearMines[i] = MINA;
+		}
+		//Mezcla las minas
+		for (int i = 0; i < linearMines.length; i++) {
+			newPos = rd.nextInt(linearMines.length);
+			aux = linearMines[newPos];
+			linearMines[newPos] = linearMines[i];
+			linearMines[i] = aux;
+		}
 		
+		//Pone las minas
+		for (int i = 0; i < tablero.length; i++) {
+			for (int j = 0; j < tablero[0].length; j++) {
+				tablero[i][j] = linearMines[(LADO_TABLERO*i) + j];
+			}
+		}
+		/*
+		 * 
+		 */
 		
+		//Reinicia puntuacion
+		puntuacion = 0;
 		
 		//Al final del m�todo hay que guardar el n�mero de minas para las casillas que no son mina:
 		for (int i = 0; i < tablero.length; i++) {
@@ -59,7 +93,21 @@ public class ControlJuego {
 	 * @return : El número de minas que hay alrededor de la casilla [i][j]
 	 **/
 	private int calculoMinasAdjuntas(int i, int j){
-
+		int count = 0;
+		//El doble for recorre un cuadrado de 9 casillas con centro en (i,j)
+		for (int iLocal = i-1; iLocal < i+2; iLocal++) {
+			for (int jLocal = j-1; jLocal < j+2; jLocal++) {
+				//Si la coordenada i local esta dentro del tablero
+				//y la coordenada j local esta dentro del tablero...
+				if ( (iLocal >= 0 && iLocal < LADO_TABLERO)
+						&& (jLocal >= 0 && jLocal < LADO_TABLERO)) {
+					//TODO anadir control de que haya mina, se estan restando numeros que no son
+					//"Resta" el valor. Si hay una mina count aumenta
+					count -= tablero[iLocal][jLocal];
+				}
+			}
+		}
+		return count;
 	}
 	
 	/**
@@ -70,7 +118,8 @@ public class ControlJuego {
 	 * @return : Verdadero si no ha explotado una mina. Falso en caso contrario.
 	 */
 	public boolean abrirCasilla(int i, int j){
-
+		puntuacion++;
+		return tablero[i][j] != MINA;
 	}
 	
 	
@@ -80,6 +129,8 @@ public class ControlJuego {
 	 * @return Devuelve verdadero si se han abierto todas las celdas que no son minas.
 	 **/
 	public boolean esFinJuego(){
+		//TODO para distinto numero de minas
+		return puntuacion == LADO_TABLERO * LADO_TABLERO - 20;
 	}
 	
 	
@@ -105,6 +156,7 @@ public class ControlJuego {
 	 * @return Un entero que representa el número de minas alrededor de la celda
 	 */
 	public int getMinasAlrededor(int i, int j) {
+		return tablero[i][j];
 	}
 
 	/**
@@ -112,6 +164,7 @@ public class ControlJuego {
 	 * @return Un entero con la puntuación actual
 	 */
 	public int getPuntuacion() {
+		return puntuacion;
 	}
 	
 }

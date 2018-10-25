@@ -229,6 +229,30 @@ public class VentanaPrincipal {
 	}
 	
 	/**
+	 * Abre todas las casillas que están alrededor de un boton
+	 * @param i
+	 * @param j
+	 * @pre: se ha pulsado un boton con numero 0
+	 * @post: todos los botones colindantes se abren
+	 */
+	public void abrirAlrededores(int i, int j) {
+		ActionEvent event = new ActionEvent(botonesJuego[i][j+1], ActionEvent.ACTION_PERFORMED, "");
+		//Recorre las casillas circundantes
+		for (int iLocal = i-1; iLocal < i+2; iLocal++) {
+			for (int jLocal = j-1; jLocal < j+2; jLocal++) {
+				try {
+					if (! (iLocal == i && jLocal == j)) {//Si no es el centro
+						//Obtiene el listener del boton y le lanza un evento
+						botonesJuego[iLocal][jLocal].getActionListeners()[0].actionPerformed(event);
+					}
+				} catch (ArrayIndexOutOfBoundsException e) {
+					//e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Reinicia la partida, bien porque se termino el juego y se quiere volver a jugar
 	 * o porque el jugador pulsó el boton Empezar
 	 */

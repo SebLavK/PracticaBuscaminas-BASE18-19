@@ -236,20 +236,25 @@ public class VentanaPrincipal {
 	 * @post: todos los botones colindantes se abren
 	 */
 	public void abrirAlrededores(int i, int j) {
-		ActionEvent event = new ActionEvent(botonesJuego[i][j+1], ActionEvent.ACTION_PERFORMED, "");
+		ActionEvent event = new ActionEvent(botonesJuego[i][j], ActionEvent.ACTION_PERFORMED, "");
 		//Recorre las casillas circundantes
 		for (int iLocal = i-1; iLocal < i+2; iLocal++) {
 			for (int jLocal = j-1; jLocal < j+2; jLocal++) {
 				try {
-					if (! (iLocal == i && jLocal == j)) {//Si no es el centro
+					if (iLocal != i && jLocal != j) {//Si no es el centro
+						/*Peligroso hacerlo con este metodo, si se abre el de al lado, este abre el que lo abrio
 						//Obtiene el listener del boton y le lanza un evento
 						botonesJuego[iLocal][jLocal].getActionListeners()[0].actionPerformed(event);
+						*/
+						juego.abrirCasilla(iLocal, jLocal);
+						mostrarNumMinasAlrededor(iLocal, jLocal);
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 					//e.printStackTrace();
 				}
 			}
 		}
+		actualizarPuntuacion();
 	}
 	
 	/**

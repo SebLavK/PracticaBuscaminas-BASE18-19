@@ -32,7 +32,7 @@ public class VentanaPrincipal {
 	JButton [][] botonesJuego;
 	
 	//Correspondencia de colores para las minas:
-	Color correspondenciaColores [] = {Color.BLACK, Color.CYAN, Color.GREEN, Color.ORANGE, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED};
+	Color correspondenciaColores [] = {Color.BLACK, Color.BLUE, Color.GREEN, Color.ORANGE, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED};
 	
 	JButton botonEmpezar;
 	JTextField pantallaPuntuacion;
@@ -168,6 +168,9 @@ public class VentanaPrincipal {
 		JPanel localPanel = panelesJuego[i][j];
 		int value = juego.getMinasAlrededor(i, j);
 		JLabel localLabel = new JLabel(Integer.toString(value));
+		if (value == 0) {
+			localLabel.setText("");
+		}
 		if (value < 0) {
 			value = 0;
 		}
@@ -232,7 +235,7 @@ public class VentanaPrincipal {
 	 * Abre todas las casillas que están alrededor de un boton
 	 * @param i
 	 * @param j
-	 * @pre: se ha pulsado un boton con numero 0
+	 * @pre: se ha pulsado un boton con numero 0, y en su panel ya no hay boton
 	 * @post: todos los botones colindantes se abren
 	 */
 	public void abrirAlrededores(int i, int j) {
@@ -241,18 +244,29 @@ public class VentanaPrincipal {
 		for (int iLocal = i-1; iLocal < i+2; iLocal++) {
 			for (int jLocal = j-1; jLocal < j+2; jLocal++) {
 				try {
-					if (iLocal != i && jLocal != j) {//Si no es el centro
-						/*Peligroso hacerlo con este metodo, si se abre el de al lado, este abre el que lo abrio
-						//Obtiene el listener del boton y le lanza un evento
-						botonesJuego[iLocal][jLocal].getActionListeners()[0].actionPerformed(event);
-						*/
+					if (panelesJuego[iLocal][jLocal].getComponent(0).getClass() == JButton.class) {//Si no es el centro
 						juego.abrirCasilla(iLocal, jLocal);
-						mostrarNumMinasAlrededor(iLocal, jLocal);
+						destaparBoton(iLocal, jLocal);
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 					//e.printStackTrace();
 				}
 			}
+		}
+		actualizarPuntuacion();
+	}
+
+	/**
+	 * Cambia el boton por un label
+	 * y si es cero manda abrir las casillas de alrededor.
+	 * Actualiza la puntuacion
+	 * @param i
+	 * @param j
+	 */
+	public void destaparBoton(int i, int j) {
+		mostrarNumMinasAlrededor(i, j);
+		if(juego.getMinasAlrededor(i, j) == 0) {
+			abrirAlrededores(i, j);
 		}
 		actualizarPuntuacion();
 	}

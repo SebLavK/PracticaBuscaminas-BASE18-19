@@ -1,9 +1,12 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -141,10 +144,11 @@ public class VentanaPrincipal {
 	public void inicializarListeners(){
 		for (int i = 0; i < botonesJuego.length; i++) {
 			for (int j = 0; j < botonesJuego[0].length; j++) {
-				int iIndex = i, jIndex = j;
-				botonesJuego[i][j].addActionListener(e -> mostrarNumMinasAlrededor(iIndex, jIndex));
+				botonesJuego[i][j].addActionListener(new ActionBoton(this, i, j));
 			}
 		}
+		
+		botonEmpezar.addActionListener((e) -> reiniciarJuego()); 
 	}
 	
 	
@@ -183,14 +187,56 @@ public class VentanaPrincipal {
 	 * @post : Todos los botones se desactivan excepto el de volver a iniciar el juego.
 	 */
 	public void mostrarFinJuego(boolean porExplosion) {
-		//TODO
+		int action;
+		
+		//Desactiva todos los botones
+		for (int i = 0; i < botonesJuego.length; i++) {
+			for (int j = 0; j < botonesJuego[0].length; j++) {
+				botonesJuego[i][j].removeActionListener(botonesJuego[i][j].getActionListeners()[0]);
+			}
+		}
+		
+		
+		//Muestra el mensaje
+		String message, title;
+		int messageType;
+		if (porExplosion) {
+			message = "¡Has pisado una mina!";
+			title = "¡Has perdido!";
+			messageType = JOptionPane.ERROR_MESSAGE;
+		} else {
+			message = "¡Has evitado todas las minas!";
+			title = "¡Has ganado!";
+			messageType = JOptionPane.INFORMATION_MESSAGE;
+		}
+		message += "\nFin del juego.\nPuntuación: "+juego.getPuntuacion();
+		message += "\n\n¿Volver a jugar?";
+		action = JOptionPane.showConfirmDialog(this.panelJuego, message, title,
+				JOptionPane.YES_NO_OPTION, messageType);
+		
+		if (action == JOptionPane.OK_OPTION) {
+			reiniciarJuego();
+		} else {
+			ventana.dispatchEvent(new WindowEvent(ventana, WindowEvent.WINDOW_CLOSING));
+		}
 	}
 
 	/**
 	 * Método que muestra la puntuación por pantalla.
 	 */
 	public void actualizarPuntuacion() {
-		//TODO
+		pantallaPuntuacion.setText(Integer.toString(juego.getPuntuacion()));
+	}
+	
+	/**
+	 * Reinicia la partida, bien porque se termino el juego y se quiere volver a jugar
+	 * o porque el jugador pulsó el boton Empezar
+	 */
+	public void reiniciarJuego() {
+		ventana.setContentPane(new JPanel());
+		juego.inicializarPartida();
+		inicializar();
+		refrescarPantalla();
 	}
 	
 	/**
@@ -217,6 +263,8 @@ public class VentanaPrincipal {
 		ventana.setVisible(true);
 		inicializarComponentes();	
 		inicializarListeners();
+		//TODO
+		juego.depurarTablero();
 	}
 
 

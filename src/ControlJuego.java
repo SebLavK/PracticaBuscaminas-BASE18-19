@@ -41,7 +41,6 @@ public class ControlJuego {
 				tablero[i][j] = 0;
 			}
 		}
-		//TODO repartir minas
 		/*
 		 * Crea un vector con tantas casillas como tenga el tablero con 20 minas y las reordena
 		 */
@@ -95,15 +94,18 @@ public class ControlJuego {
 	private int calculoMinasAdjuntas(int i, int j){
 		int count = 0;
 		//El doble for recorre un cuadrado de 9 casillas con centro en (i,j)
+		//Tambien recorre el centro, pero ese nunca tendra mina, el chequeo
+		//se hace antes de llamar a este metodo
 		for (int iLocal = i-1; iLocal < i+2; iLocal++) {
 			for (int jLocal = j-1; jLocal < j+2; jLocal++) {
-				//Si la coordenada i local esta dentro del tablero
-				//y la coordenada j local esta dentro del tablero...
-				if ( (iLocal >= 0 && iLocal < LADO_TABLERO)
-						&& (jLocal >= 0 && jLocal < LADO_TABLERO)) {
-					//TODO anadir control de que haya mina, se estan restando numeros que no son
-					//"Resta" el valor. Si hay una mina count aumenta
-					count -= tablero[iLocal][jLocal];
+				//Si la coordenada se sale del tablero salta el catch
+				try {
+					//Si la coordenada contiene una mina, se suma al contador
+					if ( tablero[iLocal][jLocal] == MINA ) {
+						count++;
+					}
+				} catch (ArrayIndexOutOfBoundsException e) {
+					//e.printStackTrace();
 				}
 			}
 		}

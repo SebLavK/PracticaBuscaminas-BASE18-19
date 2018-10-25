@@ -217,8 +217,6 @@ public class VentanaPrincipal {
 		ventana.setVisible(true);
 		inicializarComponentes();	
 		inicializarListeners();
-		//TODO
-		juego.depurarTablero();
 	}
 
 

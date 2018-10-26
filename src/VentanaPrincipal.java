@@ -1,10 +1,7 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
@@ -173,9 +170,10 @@ public class VentanaPrincipal {
 		}
 		if (value < 0) {
 			value = 0;
+			localLabel.setText("X");
 		}
-			localLabel.setForeground(correspondenciaColores[value]);
-			localLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		localLabel.setForeground(correspondenciaColores[value]);
+		localLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		//TODO comentar
 		localPanel.remove(botonesJuego[i][j]);
 		localPanel.add(localLabel);
@@ -239,7 +237,6 @@ public class VentanaPrincipal {
 	 * @post: todos los botones colindantes se abren
 	 */
 	public void abrirAlrededores(int i, int j) {
-		ActionEvent event = new ActionEvent(botonesJuego[i][j], ActionEvent.ACTION_PERFORMED, "");
 		//Recorre las casillas circundantes
 		for (int iLocal = i-1; iLocal < i+2; iLocal++) {
 			for (int jLocal = j-1; jLocal < j+2; jLocal++) {
@@ -269,6 +266,21 @@ public class VentanaPrincipal {
 			abrirAlrededores(i, j);
 		}
 		actualizarPuntuacion();
+	}
+	
+	/**
+	 * Muestra todas las minas
+	 * @pre: se ha perdido la partida al pisar una mina
+	 * @post: todas las minas quedan destapadas
+	 */
+	public void destaparMinas() {
+		for (int i = 0; i < botonesJuego.length; i++) {
+			for (int j = 0; j < botonesJuego[0].length; j++) {
+				if (juego.getMinasAlrededor(i, j) == ControlJuego.MINA) {
+					mostrarNumMinasAlrededor(i, j);
+				}
+			}
+		}
 	}
 	
 	/**

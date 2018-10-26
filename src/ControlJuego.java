@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -12,7 +11,7 @@ import java.util.Random;
  */
 public class ControlJuego {
 	
-	private final static int MINA = -1;
+	public final static int MINA = -1;
 	final int MINAS_INICIALES = 20;
 	final int LADO_TABLERO = 10;
 

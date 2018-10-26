@@ -37,6 +37,7 @@ public class ActionBoton implements ActionListener{
 			}
 			
 		} else {//Explosion
+			ventana.destaparMinas();
 			//Mostrar fin de juego por explosion
 			ventana.mostrarFinJuego(true);
 		}

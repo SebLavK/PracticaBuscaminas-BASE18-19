@@ -141,6 +141,7 @@ public class VentanaPrincipal {
 	public void inicializarListeners(){
 		for (int i = 0; i < botonesJuego.length; i++) {
 			for (int j = 0; j < botonesJuego[0].length; j++) {
+				botonesJuego[i][j].addMouseListener(new RightClickAction(this, i, j));
 				botonesJuego[i][j].addActionListener(new ActionBoton(this, i, j));
 			}
 		}
@@ -179,6 +180,20 @@ public class VentanaPrincipal {
 		localPanel.add(localLabel);
 		
 		refrescarPantalla();
+	}
+	
+	public void flagButton(int i, int j) {
+		//Si el panel que recibe contiene un boton
+		if (panelesJuego[i][j].getComponent(0) instanceof JButton) {
+			JButton targetButton = botonesJuego[i][j];
+			if (targetButton.getText().equals("-")) {
+				targetButton.setText("F");
+			} else if (targetButton.getText().equals("F")) {
+				targetButton.setText("?");
+			} else {
+				targetButton.setText("-");
+			}
+		}
 	}
 	
 	
@@ -241,7 +256,7 @@ public class VentanaPrincipal {
 		for (int iLocal = i-1; iLocal < i+2; iLocal++) {
 			for (int jLocal = j-1; jLocal < j+2; jLocal++) {
 				try {
-					if (panelesJuego[iLocal][jLocal].getComponent(0).getClass() == JButton.class) {//Si no es el centro
+					if (panelesJuego[iLocal][jLocal].getComponent(0) instanceof JButton) {//Si no es el centro
 						juego.abrirCasilla(iLocal, jLocal);
 						destaparBoton(iLocal, jLocal);
 					}

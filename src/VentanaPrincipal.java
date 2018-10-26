@@ -125,6 +125,7 @@ public class VentanaPrincipal {
 		for (int i = 0; i < botonesJuego.length; i++) {
 			for (int j = 0; j < botonesJuego[i].length; j++) {
 				botonesJuego[i][j] = new JButton("-");
+				botonesJuego[i][j].setFocusable(false);
 				panelesJuego[i][j].add(botonesJuego[i][j]);
 			}
 		}
@@ -143,6 +144,7 @@ public class VentanaPrincipal {
 			for (int j = 0; j < botonesJuego[0].length; j++) {
 				botonesJuego[i][j].addMouseListener(new RightClickAction(this, i, j));
 				botonesJuego[i][j].addActionListener(new ActionBoton(this, i, j));
+				panelesJuego[i][j].addMouseListener(new TwoClickAction(this, i ,j));
 			}
 		}
 		
@@ -176,7 +178,7 @@ public class VentanaPrincipal {
 		localLabel.setForeground(correspondenciaColores[value]);
 		localLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		//TODO comentar
-		localPanel.remove(botonesJuego[i][j]);
+		localPanel.remove(0);
 		localPanel.add(localLabel);
 		
 		refrescarPantalla();
@@ -211,6 +213,9 @@ public class VentanaPrincipal {
 				botonesJuego[i][j].removeActionListener(botonesJuego[i][j].getActionListeners()[0]);
 			}
 		}
+		
+		//Muestra todas las minas
+		destaparMinas();
 		
 		
 		//Muestra el mensaje
@@ -248,17 +253,29 @@ public class VentanaPrincipal {
 	 * Abre todas las casillas que están alrededor de un boton
 	 * @param i
 	 * @param j
+	 * @param safe si es seguro y se hara de forma recursiva (para ceros)
 	 * @pre: se ha pulsado un boton con numero 0, y en su panel ya no hay boton
 	 * @post: todos los botones colindantes se abren
 	 */
-	public void abrirAlrededores(int i, int j) {
+	public void abrirAlrededores(int i, int j, boolean safe) {
+		boolean exploded = false;
 		//Recorre las casillas circundantes
 		for (int iLocal = i-1; iLocal < i+2; iLocal++) {
 			for (int jLocal = j-1; jLocal < j+2; jLocal++) {
 				try {
-					if (panelesJuego[iLocal][jLocal].getComponent(0) instanceof JButton) {//Si no es el centro
+					if (panelesJuego[iLocal][jLocal].getComponent(0) instanceof JButton) {
 						juego.abrirCasilla(iLocal, jLocal);
-						destaparBoton(iLocal, jLocal);
+						if (safe) {//Para recursivo
+							destaparBoton(iLocal, jLocal, safe);
+						} else {
+							if (panelesJuego[iLocal][jLocal].getComponent(0) instanceof JButton
+									&& botonesJuego[iLocal][jLocal].getText().equals("-")) {
+								mostrarNumMinasAlrededor(iLocal, jLocal);
+								if (juego.getMinasAlrededor(iLocal, jLocal) == ControlJuego.MINA) {
+									exploded = true;
+								}
+							}
+						}
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 					//e.printStackTrace();
@@ -266,21 +283,24 @@ public class VentanaPrincipal {
 			}
 		}
 		actualizarPuntuacion();
+		if (exploded) {
+			mostrarFinJuego(true);
+		}
 	}
-
+	
 	/**
 	 * Cambia el boton por un label
 	 * y si es cero manda abrir las casillas de alrededor.
 	 * Actualiza la puntuacion
 	 * @param i
 	 * @param j
+	 * @param safe si es seguro y se hara de forma recursiva (para ceros)
 	 */
-	public void destaparBoton(int i, int j) {
+	public void destaparBoton(int i, int j, boolean safe) {
 		mostrarNumMinasAlrededor(i, j);
 		if(juego.getMinasAlrededor(i, j) == 0) {
-			abrirAlrededores(i, j);
+			abrirAlrededores(i, j, safe);
 		}
-		actualizarPuntuacion();
 	}
 	
 	/**

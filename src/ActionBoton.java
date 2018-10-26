@@ -29,7 +29,7 @@ public class ActionBoton implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		//Si se abre una casilla sin mina...
 		if (juego.abrirCasilla(i, j)) {
-			ventana.destaparBoton(i, j);
+			ventana.destaparBoton(i, j, true);
 			//Si es el fin del juego
 			if (juego.esFinJuego()) {
 				//Mostrar fin de juego por victoria
@@ -37,7 +37,6 @@ public class ActionBoton implements ActionListener{
 			}
 			
 		} else {//Explosion
-			ventana.destaparMinas();
 			//Mostrar fin de juego por explosion
 			ventana.mostrarFinJuego(true);
 		}

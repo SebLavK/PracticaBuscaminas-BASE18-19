@@ -185,6 +185,7 @@ public class VentanaPrincipal {
 	}
 	
 	public void flagButton(int i, int j) {
+		//TODO desactivar listeners para banderas e interrogantes
 		//Si el panel que recibe contiene un boton
 		if (panelesJuego[i][j].getComponent(0) instanceof JButton) {
 			JButton targetButton = botonesJuego[i][j];
@@ -258,6 +259,8 @@ public class VentanaPrincipal {
 	 * @post: todos los botones colindantes se abren
 	 */
 	public void abrirAlrededores(int i, int j, boolean safe) {
+		//TODO mejorar esto
+		//TODO si se expande en modo "unsafe" un boton y abre un cero, que ese cero se abra de forma recursiva
 		boolean exploded = false;
 		//Recorre las casillas circundantes
 		for (int iLocal = i-1; iLocal < i+2; iLocal++) {

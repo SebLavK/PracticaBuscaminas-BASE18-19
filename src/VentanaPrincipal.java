@@ -2,7 +2,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -16,6 +15,9 @@ import javax.swing.SwingConstants;
 
 public class VentanaPrincipal {
 
+	public static final long DIALOG_WAIT_TIME = 1000;
+	
+	
 	//La ventana principal, en este caso, guarda todos los componentes:
 	JFrame ventana;
 	JPanel panelImagen;
@@ -41,6 +43,12 @@ public class VentanaPrincipal {
 	//Un objeto guarda todos los iconos
 	SweeperIcons icons;
 	
+	//La ultima casilla pulsada
+	JPanel ultimoPanel;
+	
+	//Control de fin de juego, para cancelar listeners
+	boolean endGame;
+	
 	
 	//Constructor, marca el tamaño y el cierre del frame
 	public VentanaPrincipal() {
@@ -53,6 +61,7 @@ public class VentanaPrincipal {
 	
 	//Inicializa todos los componentes del frame
 	public void inicializarComponentes(){
+		endGame = false;
 		
 		//Definimos el layout:
 		ventana.setLayout(new GridBagLayout());
@@ -69,6 +78,7 @@ public class VentanaPrincipal {
 		//BOTON EMPEZAR
 //		botonEmpezar = new JButton("Go!");
 		botonEmpezar = new JButton(icons.getSmiley(SweeperIcons.BASE));
+		botonEmpezar.setName("botonEmpezar");
 		
 		//Para que no muestre el borde y su fondo
 		botonEmpezar.setBorderPainted(false); 
@@ -149,6 +159,7 @@ public class VentanaPrincipal {
 		panelEmpezar.add(botonEmpezar);
 		panelPuntuacion.add(pantallaPuntuacion);
 		
+		
 	}
 	
 	/**
@@ -156,12 +167,15 @@ public class VentanaPrincipal {
 	 */
 	public void inicializarListeners(){
 		HeldDownAction heldDownAction = new HeldDownAction(this);
+		botonEmpezar.addMouseListener(heldDownAction);
 		
 		for (int i = 0; i < botonesJuego.length; i++) {
 			for (int j = 0; j < botonesJuego[0].length; j++) {
+				
 				botonesJuego[i][j].addMouseListener(new RightClickAction(this, i, j));
 				botonesJuego[i][j].addActionListener(new ActionBoton(this, i, j));
 				botonesJuego[i][j].addMouseListener(heldDownAction);
+				
 				panelesJuego[i][j].addMouseListener(heldDownAction);
 				panelesJuego[i][j].addMouseListener(new TwoClickAction(this, i ,j));
 			}
@@ -200,8 +214,12 @@ public class VentanaPrincipal {
 		refrescarPantalla();
 	}
 	
+	/**
+	 * Cicla una casilla con boton entre no tener nada, tener bandera o interrogante
+	 * @param i
+	 * @param j
+	 */
 	public void flagButton(int i, int j) {
-		//TODO desactivar listeners para banderas e interrogantes
 		//Si el panel que recibe contiene un boton
 		if (panelesJuego[i][j].getComponent(0) instanceof JButton) {
 			JButton targetButton = botonesJuego[i][j];
@@ -225,12 +243,17 @@ public class VentanaPrincipal {
 	 * @post : Todos los botones se desactivan excepto el de volver a iniciar el juego.
 	 */
 	public void mostrarFinJuego(boolean porExplosion) {
-		int action;
+//		int action;
+		actualizarPuntuacion();
 		
-		//Desactiva todos los botones
+		//Desactiva todos los listeners
+		endGame = true;
 		for (int i = 0; i < botonesJuego.length; i++) {
 			for (int j = 0; j < botonesJuego[0].length; j++) {
 				botonesJuego[i][j].removeActionListener(botonesJuego[i][j].getActionListeners()[0]);
+				botonesJuego[i][j].removeMouseListener(botonesJuego[i][j].getMouseListeners()[1]);
+				botonesJuego[i][j].removeMouseListener(botonesJuego[i][j].getMouseListeners()[0]);
+				panelesJuego[i][j].removeMouseListener(panelesJuego[i][j].getMouseListeners()[0]);
 			}
 		}
 		
@@ -242,6 +265,8 @@ public class VentanaPrincipal {
 		String message, title;
 		int messageType;
 		if (porExplosion) {
+			//Marca explotada la mina que hizo perder el juego
+			((JLabel) ultimoPanel.getComponent(0)).setIcon(icons.getMineHitTile());
 			botonEmpezar.setIcon(icons.getSmiley(SweeperIcons.LOSE));
 			message = "¡Has pisado una mina!";
 			title = "¡Has perdido!";
@@ -254,14 +279,16 @@ public class VentanaPrincipal {
 		}
 		message += "\nFin del juego.\nPuntuación: "+juego.getPuntuacion();
 		message += "\n\n¿Volver a jugar?";
-		action = JOptionPane.showConfirmDialog(this.panelJuego, message, title,
-				JOptionPane.YES_NO_OPTION, messageType);
 		
-		if (action == JOptionPane.OK_OPTION) {
-			reiniciarJuego();
-		} else {
-			ventana.dispatchEvent(new WindowEvent(ventana, WindowEvent.WINDOW_CLOSING));
-		}
+		new EndGameDialog(this, message, title, messageType).start();
+//		action = JOptionPane.showConfirmDialog(this.panelJuego, message, title,
+//				JOptionPane.YES_NO_OPTION, messageType);
+//		
+//		if (action == JOptionPane.OK_OPTION) {
+//			reiniciarJuego();
+//		} else {
+//			ventana.dispatchEvent(new WindowEvent(ventana, WindowEvent.WINDOW_CLOSING));
+//		}
 	}
 
 	/**
@@ -314,6 +341,7 @@ public class VentanaPrincipal {
 	 * @param j
 	 */
 	public void destaparBoton(int i, int j) {
+		ultimoPanel =panelesJuego[i][j];
 		if (juego.abrirCasilla(i, j)) {
 			mostrarNumMinasAlrededor(i, j);
 			if(juego.getMinasAlrededor(i, j) == 0) {

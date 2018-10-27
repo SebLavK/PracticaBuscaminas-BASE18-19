@@ -45,7 +45,7 @@ public class SweeperIcons {
 		smiley[LOSE] = new ImageIcon("icon/smiley-lose.png");
 		
 		smileyDown = new ImageIcon[4];
-		smileyDown[BASE] = new ImageIcon("icon/simley-basedown.png");
+		smileyDown[BASE] = new ImageIcon("icon/smiley-basedown.png");
 		smileyDown[WORRY] = new ImageIcon("icon/smiley-worry.png");
 		smileyDown[WIN] = new ImageIcon("icon/smiley-windown.png");
 		smileyDown[LOSE] = new ImageIcon("icon/smiley-losedown.png");

@@ -1,6 +1,8 @@
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JButton;
+
 /**
  * 
  * @author Sebas Lavigne
@@ -17,12 +19,19 @@ public class HeldDownAction extends MouseAdapter{
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		ventana.botonEmpezar.setIcon(ventana.icons.getSmiley(SweeperIcons.WORRY));
+		//Si se lanzo el evento pulsando el boton empezar
+		if (e.getSource() instanceof JButton && "botonEmpezar".equals(((JButton) e.getSource()).getName())) {
+			ventana.botonEmpezar.setIcon(ventana.icons.getSmileyDownVersion(SweeperIcons.BASE));
+		} else {
+			ventana.botonEmpezar.setIcon(ventana.icons.getSmiley(SweeperIcons.WORRY));
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		ventana.botonEmpezar.setIcon(ventana.icons.getSmiley(SweeperIcons.BASE));
+		if (! ventana.endGame) {
+			ventana.botonEmpezar.setIcon(ventana.icons.getSmiley(SweeperIcons.BASE));
+		}
 	}
 
 	

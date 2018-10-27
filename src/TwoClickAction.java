@@ -33,8 +33,9 @@ public class TwoClickAction extends MouseAdapter {
 	public void mouseReleased(MouseEvent e) {
 		//Si ambos botones estan pulsados
 		if (SwingUtilities.isLeftMouseButton(e) && SwingUtilities.isRightMouseButton(e)) {
-			//TODO chequear que no haya interrogantes alrededor
-			ventana.abrirAlrededores(i, j);;
+			if (ventana.chequearInterrogantesAlrededor(i, j)) {
+				ventana.abrirAlrededores(i, j);
+			}
 		}
 	}
 	

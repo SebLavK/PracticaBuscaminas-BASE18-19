@@ -258,8 +258,6 @@ public class VentanaPrincipal {
 	 * @param j
 	 */
 	public void abrirAlrededores(int i, int j) {
-		//TODO mejorar esto
-		//TODO si se expande en modo "unsafe" un boton y abre un cero, que ese cero se abra de forma recursiva
 		boolean exploded = false;
 		//Recorre las casillas circundantes
 		for (int iLocal = i-1; iLocal < i+2; iLocal++) {
@@ -320,6 +318,24 @@ public class VentanaPrincipal {
 				}
 			}
 		}
+	}
+	
+	public boolean chequearInterrogantesAlrededor(int i, int j) {
+		boolean safe = true;
+		
+		for (int iLocal = 0; iLocal < botonesJuego.length; iLocal++) {
+			for (int jLocal = 0; jLocal < botonesJuego[0].length; jLocal++) {
+				try {
+					if (botonesJuego[iLocal][jLocal].getText().equals("?")) {
+						safe = false;
+					}
+				} catch (ArrayIndexOutOfBoundsException e) {
+					//e.printStackTrace();
+				}
+			}
+		}
+		
+		return safe;
 	}
 	
 	/**

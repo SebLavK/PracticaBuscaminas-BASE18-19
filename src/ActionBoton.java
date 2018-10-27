@@ -25,7 +25,9 @@ public class ActionBoton implements ActionListener{
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		ventana.destaparBoton(i, j);
+		if (ventana.botonesJuego[i][j].getText().equals("-")) {
+			ventana.destaparBoton(i, j);
+		}
 	}
 
 }

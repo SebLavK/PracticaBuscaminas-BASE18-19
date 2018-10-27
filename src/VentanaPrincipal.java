@@ -252,10 +252,10 @@ public class VentanaPrincipal {
 	
 	/**
 	 * Abre todas las casillas que están alrededor de un boton
+	 * No abre una casilla si esta flagueada
+	 * Si no esta flagueada y contiene una mina, se lanza el fin del juego
 	 * @param i
 	 * @param j
-	 * @pre: se ha pulsado un boton con numero 0, y en su panel ya no hay boton
-	 * @post: todos los botones colindantes se abren
 	 */
 	public void abrirAlrededores(int i, int j) {
 		//TODO mejorar esto
@@ -286,12 +286,12 @@ public class VentanaPrincipal {
 	}
 	
 	/**
-	 * Cambia el boton por un label
-	 * y si es cero manda abrir las casillas de alrededor.
-	 * Actualiza la puntuacion
+	 * Abre una casilla
+	 * Si es cero, abre todas las de alrededor
+	 * Muestra el fin del juego si se abre una mina o si se abren
+	 * todas las casillas que no son minas
 	 * @param i
 	 * @param j
-	 * @param safe si es seguro y se hara de forma recursiva (para ceros)
 	 */
 	public void destaparBoton(int i, int j) {
 		if (juego.abrirCasilla(i, j)) {

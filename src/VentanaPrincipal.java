@@ -254,11 +254,10 @@ public class VentanaPrincipal {
 	 * Abre todas las casillas que están alrededor de un boton
 	 * @param i
 	 * @param j
-	 * @param safe si es seguro y se hara de forma recursiva (para ceros)
 	 * @pre: se ha pulsado un boton con numero 0, y en su panel ya no hay boton
 	 * @post: todos los botones colindantes se abren
 	 */
-	public void abrirAlrededores(int i, int j, boolean safe) {
+	public void abrirAlrededores(int i, int j) {
 		//TODO mejorar esto
 		//TODO si se expande en modo "unsafe" un boton y abre un cero, que ese cero se abra de forma recursiva
 		boolean exploded = false;
@@ -266,19 +265,14 @@ public class VentanaPrincipal {
 		for (int iLocal = i-1; iLocal < i+2; iLocal++) {
 			for (int jLocal = j-1; jLocal < j+2; jLocal++) {
 				try {
-					if (panelesJuego[iLocal][jLocal].getComponent(0) instanceof JButton) {
-						juego.abrirCasilla(iLocal, jLocal);
-						if (safe) {//Para recursivo
-							destaparBoton(iLocal, jLocal, safe);
-						} else {
-							if (panelesJuego[iLocal][jLocal].getComponent(0) instanceof JButton
-									&& botonesJuego[iLocal][jLocal].getText().equals("-")) {
-								mostrarNumMinasAlrededor(iLocal, jLocal);
-								if (juego.getMinasAlrededor(iLocal, jLocal) == ControlJuego.MINA) {
-									exploded = true;
-								}
-							}
-						}
+					if (panelesJuego[iLocal][jLocal].getComponent(0)
+							instanceof JButton
+							&& botonesJuego[iLocal][jLocal].getText()
+							.equals("-")) {
+						destaparBoton(iLocal, jLocal);
+						if (juego.getMinasAlrededor(iLocal, jLocal) == ControlJuego.MINA) {
+							exploded = true;
+						} 
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 					//e.printStackTrace();
@@ -299,10 +293,17 @@ public class VentanaPrincipal {
 	 * @param j
 	 * @param safe si es seguro y se hara de forma recursiva (para ceros)
 	 */
-	public void destaparBoton(int i, int j, boolean safe) {
-		mostrarNumMinasAlrededor(i, j);
-		if(juego.getMinasAlrededor(i, j) == 0) {
-			abrirAlrededores(i, j, safe);
+	public void destaparBoton(int i, int j) {
+		if (juego.abrirCasilla(i, j)) {
+			mostrarNumMinasAlrededor(i, j);
+			if(juego.getMinasAlrededor(i, j) == 0) {
+				abrirAlrededores(i, j);
+			}
+			if (juego.esFinJuego() ) {
+				mostrarFinJuego(false);
+			}
+		} else {
+			mostrarFinJuego(true);
 		}
 	}
 	

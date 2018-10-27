@@ -1,4 +1,3 @@
-import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -35,7 +34,7 @@ public class TwoClickAction extends MouseAdapter {
 		//Si ambos botones estan pulsados
 		if (SwingUtilities.isLeftMouseButton(e) && SwingUtilities.isRightMouseButton(e)) {
 			//TODO chequear que no haya interrogantes alrededor
-			ventana.abrirAlrededores(i, j, false);;
+			ventana.abrirAlrededores(i, j);;
 		}
 	}
 	

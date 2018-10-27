@@ -38,13 +38,17 @@ public class VentanaPrincipal {
 	//LA VENTANA GUARDA UN CONTROL DE JUEGO:
 	ControlJuego juego;
 	
+	//Un objeto guarda todos los iconos
+	SweeperIcons icons;
+	
 	
 	//Constructor, marca el tamaño y el cierre del frame
 	public VentanaPrincipal() {
 		ventana = new JFrame();
-		ventana.setBounds(100, 100, 700, 500);
+		ventana.setBounds(100, 100, 260, 300);
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		juego = new ControlJuego();
+		icons = new SweeperIcons();
 	}
 	
 	//Inicializa todos los componentes del frame
@@ -124,7 +128,10 @@ public class VentanaPrincipal {
 		botonesJuego = new JButton[10][10];
 		for (int i = 0; i < botonesJuego.length; i++) {
 			for (int j = 0; j < botonesJuego[i].length; j++) {
-				botonesJuego[i][j] = new JButton("-");
+//				botonesJuego[i][j] = new JButton("-");
+				botonesJuego[i][j] = new JButton(icons.unmarked());
+				//TODO MOSTRAR ESTO A JESUS
+				botonesJuego[i][j].setActionCommand("-");
 				botonesJuego[i][j].setFocusable(false);
 				panelesJuego[i][j].add(botonesJuego[i][j]);
 			}
@@ -167,17 +174,14 @@ public class VentanaPrincipal {
 	public void mostrarNumMinasAlrededor(int i , int j) {
 		JPanel localPanel = panelesJuego[i][j];
 		int value = juego.getMinasAlrededor(i, j);
-		JLabel localLabel = new JLabel(Integer.toString(value));
-		if (value == 0) {
-			localLabel.setText("");
-		}
+		JLabel localLabel = new JLabel();
 		if (value < 0) {
-			value = 0;
-			localLabel.setText("X");
+			localLabel.setIcon(icons.getMineTile());
+		} else {
+			localLabel.setIcon(icons.getNumTile(value));
 		}
-		localLabel.setForeground(correspondenciaColores[value]);
+//		localLabel.setForeground(correspondenciaColores[value]);
 		localLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		//TODO comentar
 		localPanel.remove(0);
 		localPanel.add(localLabel);
 		
@@ -189,12 +193,15 @@ public class VentanaPrincipal {
 		//Si el panel que recibe contiene un boton
 		if (panelesJuego[i][j].getComponent(0) instanceof JButton) {
 			JButton targetButton = botonesJuego[i][j];
-			if (targetButton.getText().equals("-")) {
-				targetButton.setText("F");
-			} else if (targetButton.getText().equals("F")) {
-				targetButton.setText("?");
+			if (targetButton.getActionCommand().equals("-")) {
+				targetButton.setActionCommand("F");
+				targetButton.setIcon(icons.flag());
+			} else if (targetButton.getActionCommand().equals("F")) {
+				targetButton.setActionCommand("?");
+				targetButton.setIcon(icons.question());
 			} else {
-				targetButton.setText("-");
+				targetButton.setActionCommand("-");
+				targetButton.setIcon(icons.unmarked());
 			}
 		}
 	}
@@ -265,7 +272,7 @@ public class VentanaPrincipal {
 				try {
 					if (panelesJuego[iLocal][jLocal].getComponent(0)
 							instanceof JButton
-							&& botonesJuego[iLocal][jLocal].getText()
+							&& botonesJuego[iLocal][jLocal].getActionCommand()
 							.equals("-")) {
 						destaparBoton(iLocal, jLocal);
 						if (juego.getMinasAlrededor(iLocal, jLocal) == ControlJuego.MINA) {
@@ -326,7 +333,7 @@ public class VentanaPrincipal {
 		for (int iLocal = 0; iLocal < botonesJuego.length; iLocal++) {
 			for (int jLocal = 0; jLocal < botonesJuego[0].length; jLocal++) {
 				try {
-					if (botonesJuego[iLocal][jLocal].getText().equals("?")) {
+					if (botonesJuego[iLocal][jLocal].getActionCommand().equals("?")) {
 						safe = false;
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {

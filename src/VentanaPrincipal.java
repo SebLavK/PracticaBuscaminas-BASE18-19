@@ -45,7 +45,7 @@ public class VentanaPrincipal {
 	//Constructor, marca el tamaño y el cierre del frame
 	public VentanaPrincipal() {
 		ventana = new JFrame();
-		ventana.setBounds(100, 100, 260, 300);
+		ventana.setBounds(100, 100, 260+18, 260+20+80);
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		juego = new ControlJuego();
 		icons = new SweeperIcons();
@@ -66,8 +66,16 @@ public class VentanaPrincipal {
 		panelJuego = new JPanel();
 		panelJuego.setLayout(new GridLayout(10,10));
 		
+		//BOTON EMPEZAR
+//		botonEmpezar = new JButton("Go!");
+		botonEmpezar = new JButton(icons.getSmiley(SweeperIcons.BASE));
 		
-		botonEmpezar = new JButton("Go!");
+		//Para que no muestre el borde y su fondo
+		botonEmpezar.setBorderPainted(false); 
+        botonEmpezar.setContentAreaFilled(false); 
+        botonEmpezar.setFocusPainted(false); 
+        botonEmpezar.setOpaque(false);
+		
 		pantallaPuntuacion = new JTextField("0");
 		pantallaPuntuacion.setEditable(false);
 		pantallaPuntuacion.setHorizontalAlignment(SwingConstants.CENTER);
@@ -147,10 +155,14 @@ public class VentanaPrincipal {
 	 * Método que inicializa todos los lísteners que necesita inicialmente el programa
 	 */
 	public void inicializarListeners(){
+		HeldDownAction heldDownAction = new HeldDownAction(this);
+		
 		for (int i = 0; i < botonesJuego.length; i++) {
 			for (int j = 0; j < botonesJuego[0].length; j++) {
 				botonesJuego[i][j].addMouseListener(new RightClickAction(this, i, j));
 				botonesJuego[i][j].addActionListener(new ActionBoton(this, i, j));
+				botonesJuego[i][j].addMouseListener(heldDownAction);
+				panelesJuego[i][j].addMouseListener(heldDownAction);
 				panelesJuego[i][j].addMouseListener(new TwoClickAction(this, i ,j));
 			}
 		}
@@ -230,10 +242,12 @@ public class VentanaPrincipal {
 		String message, title;
 		int messageType;
 		if (porExplosion) {
+			botonEmpezar.setIcon(icons.getSmiley(SweeperIcons.LOSE));
 			message = "¡Has pisado una mina!";
 			title = "¡Has perdido!";
 			messageType = JOptionPane.ERROR_MESSAGE;
 		} else {
+			botonEmpezar.setIcon(icons.getSmiley(SweeperIcons.WIN));
 			message = "¡Has evitado todas las minas!";
 			title = "¡Has ganado!";
 			messageType = JOptionPane.INFORMATION_MESSAGE;
@@ -273,11 +287,12 @@ public class VentanaPrincipal {
 					if (panelesJuego[iLocal][jLocal].getComponent(0)
 							instanceof JButton
 							&& botonesJuego[iLocal][jLocal].getActionCommand()
-							.equals("-")) {
-						destaparBoton(iLocal, jLocal);
+							.equals("-")
+							&& !exploded) {
 						if (juego.getMinasAlrededor(iLocal, jLocal) == ControlJuego.MINA) {
 							exploded = true;
 						} 
+						destaparBoton(iLocal, jLocal);
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {
 					//e.printStackTrace();
@@ -285,9 +300,9 @@ public class VentanaPrincipal {
 			}
 		}
 		actualizarPuntuacion();
-		if (exploded) {
-			mostrarFinJuego(true);
-		}
+//		if (exploded) {
+//			mostrarFinJuego(true);
+//		}
 	}
 	
 	/**

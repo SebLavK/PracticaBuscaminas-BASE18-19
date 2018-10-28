@@ -2,6 +2,9 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.Period;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -52,7 +55,11 @@ public class VentanaPrincipal {
 	//Control de si es la primera jugada
 	boolean firstClick;
 	
+	//Label de tiempo de juego
+	JTextField playtime;
 	
+	//Contador de tiempo
+	TimeUpdater timeUpdater;
 	
 	
 	//Constructor, marca el tamaño y el cierre del frame
@@ -74,6 +81,7 @@ public class VentanaPrincipal {
 		
 		//Inicializamos componentes
 		panelImagen = new JPanel();
+		panelImagen.setLayout(new GridLayout(1, 1));
 		panelEmpezar = new JPanel();
 		panelEmpezar.setLayout(new GridLayout(1,1));
 		panelPuntuacion = new JPanel();
@@ -165,6 +173,11 @@ public class VentanaPrincipal {
 		panelEmpezar.add(botonEmpezar);
 		panelPuntuacion.add(pantallaPuntuacion);
 		
+		//Contador de tiempo en panelImagen
+		playtime = new JTextField("0");
+		playtime.setEditable(false);
+		playtime.setHorizontalAlignment(SwingConstants.CENTER);
+		panelImagen.add(playtime);
 		
 	}
 	
@@ -245,10 +258,12 @@ public class VentanaPrincipal {
 	
 	/**
 	 * Muestra una ventana que indica el fin del juego
+	 * Para el contador de tiempo
 	 * @param porExplosion : Un booleano que indica si es final del juego porque ha explotado una mina (true) o bien porque hemos desactivado todas (false) 
 	 * @post : Todos los botones se desactivan excepto el de volver a iniciar el juego.
 	 */
 	public void mostrarFinJuego(boolean porExplosion) {
+		timeUpdater.stopTimer();
 //		int action;
 		actualizarPuntuacion();
 		
@@ -284,6 +299,7 @@ public class VentanaPrincipal {
 			messageType = JOptionPane.INFORMATION_MESSAGE;
 		}
 		message += "\nFin del juego.\nPuntuación: "+juego.getPuntuacion();
+		message += "\nTiempo: "+ Duration.between(juego.getStartTime(), LocalTime.now()).getSeconds()+"s";
 		message += "\n\n¿Volver a jugar?";
 		
 		new EndGameDialog(this, message, title, messageType).start();
@@ -416,6 +432,7 @@ public class VentanaPrincipal {
 		resizeVentana();
 		
 		juego.depurarTablero();
+		timeUpdater = new TimeUpdater(this);
 	}
 	
 	/**

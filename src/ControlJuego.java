@@ -1,3 +1,4 @@
+import java.time.LocalTime;
 import java.util.Random;
 
 /**
@@ -28,9 +29,12 @@ public class ControlJuego {
 	private int puntuacion;
 	
 	// Opciones de juego
-	int mineAmount;
-	int size;
-	int difficulty;
+	private int mineAmount;
+	private int size;
+	private int difficulty;
+	
+	// Tiempo de juego
+	private LocalTime startTime;
 	
 	
 	public ControlJuego() {
@@ -270,6 +274,22 @@ public class ControlJuego {
 	 */
 	public void setDifficulty(int difficulty) {
 		this.difficulty = difficulty;
+	}
+
+
+	/**
+	 * @return the startTime
+	 */
+	public LocalTime getStartTime() {
+		return startTime;
+	}
+
+
+	/**
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(LocalTime startTime) {
+		this.startTime = startTime;
 	}
 	
 	

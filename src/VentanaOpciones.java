@@ -33,7 +33,7 @@ public class VentanaOpciones {
 		getInitialValues();
 		initializeListeners();
 		
-		JOptionPane.showMessageDialog(ventanaPrincipal.ventana, panelOpciones);
+		JOptionPane.showMessageDialog(ventanaPrincipal.ventana, panelOpciones, "Opciones", JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	/**
@@ -240,7 +240,7 @@ public class VentanaOpciones {
 			tfDifficulty.setEditable(true);
 			break;
 		}
-		System.out.println(juego.getSize());
+		
 		switch(juego.getSize()) {
 		case ControlJuego.SMALL:
 			rbSize[0].setSelected(true);

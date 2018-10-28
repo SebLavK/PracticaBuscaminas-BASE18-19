@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalTime;
 
 /**
  * Clase que implementa el listener de los botones del Buscaminas.
@@ -23,6 +24,7 @@ public class ActionBoton implements ActionListener{
 	/**
 	 *Acción que ocurrirá cuando pulsamos uno de los botones.
 	 *Si es el primer click y si se pulso en una mina, se recoloca la mina
+	 *Tambien guarda la hora de inicio de juego y lanza el contador de tiempo
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -31,6 +33,8 @@ public class ActionBoton implements ActionListener{
 			if (ventana.getJuego().getMinasAlrededor(i, j) == ControlJuego.MINA) {
 				ventana.getJuego().relocateMine(i, j);
 			}
+			ventana.getJuego().setStartTime(LocalTime.now());
+			ventana.timeUpdater.start();
 		}
 		if (ventana.botonesJuego[i][j].getActionCommand().equals("-")) {
 			ventana.destaparBoton(i, j);

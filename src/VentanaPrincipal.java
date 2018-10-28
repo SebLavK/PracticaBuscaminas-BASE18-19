@@ -50,13 +50,16 @@ public class VentanaPrincipal {
 	boolean endGame;
 	
 	
+	
+	
 	//Constructor, marca el tamaño y el cierre del frame
 	public VentanaPrincipal() {
-		ventana = new JFrame();
+		ventana = new JFrame("Buscaminas");
 		ventana.setBounds(100, 100, 260+18, 260+20+80);
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		juego = new ControlJuego();
 		icons = new SweeperIcons();
+		
 	}
 	
 	//Inicializa todos los componentes del frame
@@ -73,7 +76,7 @@ public class VentanaPrincipal {
 		panelPuntuacion = new JPanel();
 		panelPuntuacion.setLayout(new GridLayout(1,1));
 		panelJuego = new JPanel();
-		panelJuego.setLayout(new GridLayout(10,10));
+		panelJuego.setLayout(new GridLayout(juego.getSize(),juego.getSize()));
 		
 		//BOTON EMPEZAR
 //		botonEmpezar = new JButton("Go!");
@@ -133,7 +136,7 @@ public class VentanaPrincipal {
 		ventana.add(panelJuego, settings);
 		
 		//Paneles
-		panelesJuego = new JPanel[10][10];
+		panelesJuego = new JPanel[juego.getSize()][juego.getSize()];
 		for (int i = 0; i < panelesJuego.length; i++) {
 			for (int j = 0; j < panelesJuego[i].length; j++) {
 				panelesJuego[i][j] = new JPanel();
@@ -143,7 +146,7 @@ public class VentanaPrincipal {
 		}
 		
 		//Botones
-		botonesJuego = new JButton[10][10];
+		botonesJuego = new JButton[juego.getSize()][juego.getSize()];
 		for (int i = 0; i < botonesJuego.length; i++) {
 			for (int j = 0; j < botonesJuego[i].length; j++) {
 //				botonesJuego[i][j] = new JButton("-");
@@ -251,8 +254,8 @@ public class VentanaPrincipal {
 		for (int i = 0; i < botonesJuego.length; i++) {
 			for (int j = 0; j < botonesJuego[0].length; j++) {
 				botonesJuego[i][j].removeActionListener(botonesJuego[i][j].getActionListeners()[0]);
+				botonesJuego[i][j].removeMouseListener(botonesJuego[i][j].getMouseListeners()[2]);
 				botonesJuego[i][j].removeMouseListener(botonesJuego[i][j].getMouseListeners()[1]);
-				botonesJuego[i][j].removeMouseListener(botonesJuego[i][j].getMouseListeners()[0]);
 				panelesJuego[i][j].removeMouseListener(panelesJuego[i][j].getMouseListeners()[0]);
 			}
 		}
@@ -370,6 +373,13 @@ public class VentanaPrincipal {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param i
+	 * @param j
+	 * @return verdadero o falso si alrededor de la casilla dada hay alguna
+	 * marcada con interrogante
+	 */
 	public boolean chequearInterrogantesAlrededor(int i, int j) {
 		boolean safe = true;
 		
@@ -393,10 +403,15 @@ public class VentanaPrincipal {
 	 * o porque el jugador pulsó el boton Empezar
 	 */
 	public void reiniciarJuego() {
+		new VentanaOpciones(this, juego);
 		ventana.setContentPane(new JPanel());
 		juego.inicializarPartida();
-		inicializar();
+		inicializarComponentes();
+		inicializarListeners();
 		refrescarPantalla();
+		resizeVentana();
+		
+		juego.depurarTablero();
 	}
 	
 	/**
@@ -405,6 +420,13 @@ public class VentanaPrincipal {
 	public void refrescarPantalla(){
 		ventana.revalidate(); 
 		ventana.repaint();
+	}
+	
+	/**
+	 * Cambia el tamaño de la ventana
+	 */
+	public void resizeVentana() {
+		ventana.setBounds(100, 100, juego.getSize()*26+18, juego.getSize()*26+110);
 	}
 
 	/**
@@ -423,8 +445,9 @@ public class VentanaPrincipal {
 		ventana.setVisible(true);
 		inicializarComponentes();	
 		inicializarListeners();
-		//TODO
-		juego.depurarTablero();
+		resizeVentana();
+		reiniciarJuego();
+		
 	}
 
 

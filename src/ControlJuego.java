@@ -12,16 +12,33 @@ import java.util.Random;
 public class ControlJuego {
 	
 	public final static int MINA = -1;
+	public static final int SMALL = 10;
+	public static final int MEDIUM = 16;
+	public static final int BIG = 22;
+	
+	public static final int EASY = 5;
+	public static final int NORMAL = 3;
+	public static final int HARD = 2;
+	
+	
 	final int MINAS_INICIALES = 20;
 	final int LADO_TABLERO = 10;
 
 	private int [][] tablero;
 	private int puntuacion;
 	
+	// Opciones de juego
+	int mineAmount;
+	int size;
+	int difficulty;
+	
 	
 	public ControlJuego() {
-		//Creamos el tablero:
-		tablero = new int[LADO_TABLERO][LADO_TABLERO];
+		
+		// Valores por defecto de las opciones
+		difficulty = ControlJuego.EASY;
+		size = ControlJuego.SMALL;
+		
 		
 		//Inicializamos una nueva partida
 		inicializarPartida();
@@ -34,6 +51,12 @@ public class ControlJuego {
 	 * 			El resto de posiciones que no son minas guardan en el entero cuántas minas hay alrededor de la celda
 	 */
 	public void inicializarPartida(){
+		//Establecemos cantidad de minas
+		mineAmount = size*size / difficulty;
+		
+		//Creamos el tablero:
+		tablero = new int[size][size];
+		
 		//Pone el tablero a cero
 		for (int i = 0; i < tablero.length; i++) {
 			for (int j = 0; j < tablero[0].length; j++) {
@@ -41,14 +64,13 @@ public class ControlJuego {
 			}
 		}
 		/*
-		 * Crea un vector con tantas casillas como tenga el tablero con 20 minas y las reordena
+		 * Crea un vector con tantas casillas como tenga el tablero con minas y las reordena
 		 */
-		int[] linearMines = new int[LADO_TABLERO*LADO_TABLERO];
+		int[] linearMines = new int[size*size];
 		Random rd = new Random();
 		int aux, newPos;
-		//Anade 20 minas
 		//TODO chequear que no se anadan mas minas que casillas haya en el tablero (no hace falta de momento)
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < mineAmount; i++) {
 			linearMines[i] = MINA;
 		}
 		//Mezcla las minas
@@ -62,7 +84,7 @@ public class ControlJuego {
 		//Pone las minas
 		for (int i = 0; i < tablero.length; i++) {
 			for (int j = 0; j < tablero[0].length; j++) {
-				tablero[i][j] = linearMines[(LADO_TABLERO*i) + j];
+				tablero[i][j] = linearMines[(size*i) + j];
 			}
 		}
 		/*
@@ -131,7 +153,7 @@ public class ControlJuego {
 	 **/
 	public boolean esFinJuego(){
 		//TODO para distinto numero de minas
-		return puntuacion == LADO_TABLERO * LADO_TABLERO - 20;
+		return puntuacion == size * size - mineAmount;
 	}
 	
 	
@@ -147,6 +169,7 @@ public class ControlJuego {
 			System.out.println();
 		}
 		System.out.println("\nPuntuación: "+puntuacion);
+		System.out.println("LADO: "+size+", DIFFICULTAD: "+difficulty+", MINAS: "+mineAmount);
 	}
 
 	/**
@@ -167,5 +190,55 @@ public class ControlJuego {
 	public int getPuntuacion() {
 		return puntuacion;
 	}
+
+
+	/**
+	 * @return the mineAmount
+	 */
+	public int getMineAmount() {
+		return mineAmount;
+	}
+
+
+	/**
+	 * @param mineAmount the difficulty to set
+	 */
+	public void setMineAmount(int mineAmount) {
+		this.mineAmount = mineAmount;
+	}
+
+
+	/**
+	 * @return the size
+	 */
+	public int getSize() {
+		return size;
+	}
+
+
+	/**
+	 * @param size the size to set
+	 */
+	public void setSize(int size) {
+		this.size = size;
+	}
+
+
+	/**
+	 * @return the difficulty
+	 */
+	public int getDifficulty() {
+		return difficulty;
+	}
+
+
+	/**
+	 * @param difficultyModifier the difficulty to set
+	 */
+	public void setDifficulty(int difficulty) {
+		this.difficulty = difficulty;
+	}
+	
+	
 	
 }

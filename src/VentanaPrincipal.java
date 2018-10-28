@@ -49,6 +49,9 @@ public class VentanaPrincipal {
 	//Control de fin de juego, para cancelar listeners
 	boolean endGame;
 	
+	//Control de si es la primera jugada
+	boolean firstClick;
+	
 	
 	
 	
@@ -406,6 +409,7 @@ public class VentanaPrincipal {
 		new VentanaOpciones(this, juego);
 		ventana.setContentPane(new JPanel());
 		juego.inicializarPartida();
+		firstClick = true;
 		inicializarComponentes();
 		inicializarListeners();
 		refrescarPantalla();

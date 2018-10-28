@@ -94,6 +94,14 @@ public class ControlJuego {
 		//Reinicia puntuacion
 		puntuacion = 0;
 		
+		populateFreeTiles();
+	}
+
+
+	/**
+	 * Calcula las minas adjuntas de aquellas casillas que no tengan mina
+	 */
+	public void populateFreeTiles() {
 		//Al final del m�todo hay que guardar el n�mero de minas para las casillas que no son mina:
 		for (int i = 0; i < tablero.length; i++) {
 			for (int j = 0; j < tablero[i].length; j++) {
@@ -154,6 +162,31 @@ public class ControlJuego {
 	public boolean esFinJuego(){
 		//TODO para distinto numero de minas
 		return puntuacion == size * size - mineAmount;
+	}
+	
+	/**
+	 * Debería usarse cuando el primer click de un jugador da en una mina
+	 * Quita la mina de la casilla y la pone en otro lugar
+	 * El nuevo lugar no puede ser el original ni puede tener ya una mina
+	 * @param i
+	 * @param j
+	 */
+	public void relocateMine(int i, int j) {
+		Random rd = new Random();
+		int iNew, jNew;
+		boolean success = false;
+		do {
+			iNew = rd.nextInt(size);
+			jNew = rd.nextInt(size);
+			if (iNew != i && jNew != j && getMinasAlrededor(iNew, jNew) != MINA) {
+				tablero[i][j] = 0;
+				tablero[iNew][jNew] = MINA;
+				populateFreeTiles();
+				success = true;
+			}
+		} while ( !success );
+		
+		System.out.println("Se ha cambiado una mina de lugar");
 	}
 	
 	

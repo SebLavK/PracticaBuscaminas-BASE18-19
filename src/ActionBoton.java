@@ -22,9 +22,16 @@ public class ActionBoton implements ActionListener{
 	
 	/**
 	 *Acción que ocurrirá cuando pulsamos uno de los botones.
+	 *Si es el primer click y si se pulso en una mina, se recoloca la mina
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if (ventana.firstClick) {
+			ventana.firstClick = false;
+			if (ventana.getJuego().getMinasAlrededor(i, j) == ControlJuego.MINA) {
+				ventana.getJuego().relocateMine(i, j);
+			}
+		}
 		if (ventana.botonesJuego[i][j].getActionCommand().equals("-")) {
 			ventana.destaparBoton(i, j);
 		}

@@ -29,26 +29,26 @@ public class SweeperIcons {
 	public SweeperIcons() {
 		numTile = new ImageIcon[9];
 		for (int i = 0; i < numTile.length; i++) {
-			numTile[i] = new ImageIcon("icon/mine"+i+".png");
+			numTile[i] = new ImageIcon(Principal.class.getResource("icon/mine"+i+".png"));
 		}
-		mineTile = new ImageIcon("icon/mine.png");
-		mineHitTile = new ImageIcon("icon/hit.png");
+		mineTile = new ImageIcon(Principal.class.getResource("icon/mine.png"));
+		mineHitTile = new ImageIcon(Principal.class.getResource("icon/hit.png"));
 		
-		unmarked = new ImageIcon("icon/unmarked.png");
-		flag = new ImageIcon("icon/flag.png");
-		question = new ImageIcon("icon/question.png");
+		unmarked = new ImageIcon(Principal.class.getResource("/icon/unmarked.png"));
+		flag = new ImageIcon(Principal.class.getResource("icon/flag.png"));
+		question = new ImageIcon(Principal.class.getResource("icon/question.png"));
 		
 		smiley = new ImageIcon[4];
-		smiley[BASE] = new ImageIcon("icon/smiley-base.png");
-		smiley[WORRY] = new ImageIcon("icon/smiley-worry.png");
-		smiley[WIN] = new ImageIcon("icon/smiley-win.png");
-		smiley[LOSE] = new ImageIcon("icon/smiley-lose.png");
+		smiley[BASE] = new ImageIcon(Principal.class.getResource("icon/smiley-base.png"));
+		smiley[WORRY] = new ImageIcon(Principal.class.getResource("icon/smiley-worry.png"));
+		smiley[WIN] = new ImageIcon(Principal.class.getResource("icon/smiley-win.png"));
+		smiley[LOSE] = new ImageIcon(Principal.class.getResource("icon/smiley-lose.png"));
 		
 		smileyDown = new ImageIcon[4];
-		smileyDown[BASE] = new ImageIcon("icon/smiley-basedown.png");
-		smileyDown[WORRY] = new ImageIcon("icon/smiley-worry.png");
-		smileyDown[WIN] = new ImageIcon("icon/smiley-windown.png");
-		smileyDown[LOSE] = new ImageIcon("icon/smiley-losedown.png");
+		smileyDown[BASE] = new ImageIcon(Principal.class.getResource("icon/smiley-basedown.png"));
+		smileyDown[WORRY] = new ImageIcon(Principal.class.getResource("icon/smiley-worry.png"));
+		smileyDown[WIN] = new ImageIcon(Principal.class.getResource("icon/smiley-windown.png"));
+		smileyDown[LOSE] = new ImageIcon(Principal.class.getResource("icon/smiley-losedown.png"));
 		
 	}
 	

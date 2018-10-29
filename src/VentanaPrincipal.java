@@ -4,7 +4,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.time.Duration;
 import java.time.LocalTime;
-import java.time.Period;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -15,7 +14,30 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-
+/**
+ * La ventana principal del juego Buscaminas. Actúa como interfaz del juego y como "hub"
+ * entre todas las clases que controlan la partida.
+ * 
+ * Al inicializar el objeto se ejecuta el siguiente código:
+ * {@link #inicializar()}
+ * {@code
+ * public void inicializar(){
+		//IMPORTANTE, PRIMERO HACEMOS LA VENTANA VISIBLE Y LUEGO INICIALIZAMOS LOS COMPONENTES.
+		ventana.setVisible(true);
+		inicializarComponentes();	
+		inicializarListeners();
+		resizeVentana();
+		reiniciarJuego();
+		
+	}
+ * }
+ * 
+ * @author jesusredondogarcia
+ * @author Sebas Lavigne
+ * @version 1.8
+ * @since 0.1
+ * @see ControlJuego
+ */
 public class VentanaPrincipal {
 
 	public static final long DIALOG_WAIT_TIME = 1000;
@@ -459,7 +481,9 @@ public class VentanaPrincipal {
 	}
 
 	/**
-	 * Método para inicializar el programa
+	 * Método para inicializar el programa.
+	 * Muestra la ventana, inicializa componentes, listeners, reajusta el tamaño
+	 * y "reinicia" el juego.
 	 */
 	public void inicializar(){
 		//IMPORTANTE, PRIMERO HACEMOS LA VENTANA VISIBLE Y LUEGO INICIALIZAMOS LOS COMPONENTES.

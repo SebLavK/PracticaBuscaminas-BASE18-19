@@ -34,7 +34,7 @@ import javax.swing.SwingConstants;
  * 
  * @author jesusredondogarcia
  * @author Sebas Lavigne
- * @version 1.8
+ * @version 1.8.0
  * @since 0.1
  * @see ControlJuego
  */

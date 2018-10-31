@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
  * 
  * Al inicializar el objeto se ejecuta el siguiente código:
  * {@link #inicializar()}
- * {@code
+ * <pre>{@code
  * public void inicializar(){
 		//IMPORTANTE, PRIMERO HACEMOS LA VENTANA VISIBLE Y LUEGO INICIALIZAMOS LOS COMPONENTES.
 		ventana.setVisible(true);
@@ -30,7 +30,7 @@ import javax.swing.SwingConstants;
 		reiniciarJuego();
 		
 	}
- * }
+ * }</pre>
  * 
  * @author jesusredondogarcia
  * @author Sebas Lavigne
